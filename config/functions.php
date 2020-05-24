@@ -1,5 +1,6 @@
-<?php 
-	function debugger($data,$is_die=false){
+<?php
+	// debugger function
+	function debugger($data, $is_die = false) {
 		echo "<pre>";
 		print_r($data);
 		echo "</pre>";
@@ -8,22 +9,48 @@
 		}
 	}
 
-	function sanitize($str){
+	// sanitize function
+	function sanitize($str) {
 		return trim(stripcslashes(strip_tags($str)));
 	}
 
-	function tokenize($length=100){
-		$char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789';
-		$len = strlen($char);
-		$token='';
-		for ($i=0; $i < $length; $i++) { 
-			$token.=$char[rand(0,$len-1)];
-		}
+	// tokenize fucntion
+	function tokenize($len = 100) {
+		$char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		$char_len = strlen($char);
+		$token = '';
+		for ($i = 0; $i < $len; $i++) {
+			$token .= $char[rand(0, $char_len - 1)] ;
+		} 
 		return $token;
 	}
 
-	function redirect($loc,$key,$message){
-		$_SESSION[$key]=$message;
+	// redirect function
+	function redirect($loc, $key="", $message="") {
+		$_SESSION[$key] = $message;
 		@header('location: '.$loc);
 	}
- ?>
+
+	// message flash function start
+	function flashMessage() {
+		$message_type = array('error', 'warning', 'success');
+		foreach($message_type as $key) {
+			if (isset($_SESSION[$key]) && !empty($_SESSION[$key])) {
+				echo "<span class='alert alert-".$key."'>".$_SESSION[$key]."</span>";
+				unset($_SESSION[$key]);
+				break;
+			}
+		}
+?>
+
+	<script type="text/javascript">
+		setTimeout(function() {
+			$('.alert').slideUp('slow');
+		},3000);
+	</script>
+
+
+<?php
+	}
+	// message flash function end
+?>
